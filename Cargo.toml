@@ -1,0 +1,10 @@
+[package]
+name = "vast-protocol"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+quick-xml = { version = "0.25", features = ["serialize"] }
+
+[dev-dependencies]
