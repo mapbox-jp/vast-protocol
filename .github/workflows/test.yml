@@ -1,0 +1,85 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  build:
+    name: Run build on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        rust-toolchain: [stable]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Load cargo cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('**/test.yml') }}
+    - name: Set up Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: ${{ matrix.rust-toolchain }}
+        components: rustfmt, clippy
+    - name: Format
+      uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: --all -- --check
+    - name: Build
+      uses: actions-rs/cargo@v1
+      with:
+        command: build
+        args: --workspace --all-targets --all-features
+    - name: Clippy
+      uses: actions-rs/cargo@v1
+      with:
+        command: clippy
+        args: --workspace --all-targets --all-features -- --deny clippy::all
+
+  test:
+    name: Run test on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        rust-toolchain: [stable]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Load cargo cache
+      uses: actions/cache@v3
+      id: cache
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('**/test.yml') }}
+    - name: Set up Rust ${{ matrix.rust-toolchain }} toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: ${{ matrix.rust-toolchain }}
+    - name: Clone Vast_Samples repo
+      run: |
+        git clone https://github.com/InteractiveAdvertisingBureau/VAST_Samples.git tests/VAST_Samples
+    - name: Tests
+      uses: actions-rs/cargo@v1
+      with:
+        command: test
