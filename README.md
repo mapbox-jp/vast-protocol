@@ -58,5 +58,5 @@ git clone https://github.com/InteractiveAdvertisingBureau/VAST_Samples.git tests
 
 Then run test with this command
 ```
-cargo test -- --nocapture
+cargo test --all-features -- --nocapture
 ```
