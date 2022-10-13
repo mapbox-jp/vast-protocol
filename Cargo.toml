@@ -2,6 +2,13 @@
 name = "vast-protocol"
 version = "0.1.0"
 edition = "2018"
+description = "VAST protocol v4 parser on top of serde-rs"
+readme = "README.md"
+homepage = "https://github.com/mapbox-jp/vast-protocol"
+repository = "https://github.com/mapbox-jp/vast-protocol"
+license-file = "LICENSE"
+keywords = ["parser", "xml", "serde", "vast"]
+categories = ["parsing"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
