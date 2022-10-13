@@ -89,3 +89,37 @@ fn serialize_v4() {
 
     let _: VAST = vast_protocol::from_str(&s).unwrap();
 }
+
+#[test]
+fn duration_from_std() {
+    use std::time::Duration as StdDuration;
+    assert_eq!("00:00:00", Duration::from(StdDuration::from_secs(0)).0);
+    assert_eq!("00:00:50", Duration::from(StdDuration::from_secs(50)).0);
+    assert_eq!("00:05:00", Duration::from(StdDuration::from_secs(300)).0);
+    assert_eq!(
+        "15:00:00",
+        Duration::from(StdDuration::from_secs(60 * 60 * 15)).0
+    );
+    assert_eq!(
+        "30:00:00",
+        Duration::from(StdDuration::from_secs(60 * 60 * 30)).0
+    );
+    assert_eq!(
+        "99:59:59",
+        Duration::from(StdDuration::from_secs(60 * 60 * 99 + 60 * 59 + 59)).0
+    );
+    assert_eq!(
+        "99:59:59",
+        Duration::from(StdDuration::from_secs(60 * 60 * 100)).0 // 100 hours
+    );
+
+    assert_eq!("00:00:00", Duration::from(StdDuration::from_millis(0)).0);
+    assert_eq!(
+        "00:00:00.333",
+        Duration::from(StdDuration::from_millis(333)).0
+    );
+    assert_eq!(
+        "00:00:01.333",
+        Duration::from(StdDuration::from_millis(1333)).0
+    );
+}

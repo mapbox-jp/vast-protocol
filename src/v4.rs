@@ -138,6 +138,25 @@ pub struct NonLinear {}
 #[serde(rename_all = "camelCase")]
 pub struct Duration(pub String);
 
+impl From<std::time::Duration> for Duration {
+    fn from(d: std::time::Duration) -> Self {
+        let ms = d.as_millis() % 1000;
+        let s = d.as_secs() % 60;
+        let m = (d.as_secs() / 60) % 60;
+        let h = (d.as_secs() / 60) / 60;
+
+        if d.as_secs() >= 100 * 60 * 60 {
+            return Self("99:59:59".into());
+        }
+
+        if ms > 0 {
+            Self(format!("{h:02}:{m:02}:{s:02}.{ms:03}"))
+        } else {
+            Self(format!("{h:02}:{m:02}:{s:02}"))
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TrackingEvents {
@@ -209,4 +228,18 @@ pub struct ClickTracking {
     pub id: Option<String>,
     #[serde(rename = "$value")]
     pub content: String,
+}
+
+pub mod util {
+    #[cfg(feature = "chrono")]
+    pub trait FromVastTimestamp {
+        fn parse_from_vast_timestamp(
+            s: &str,
+        ) -> chrono::ParseResult<chrono::DateTime<chrono::FixedOffset>> {
+            chrono::DateTime::parse_from_str(s, "%Y-%m-%dT%H:%M:%S%.3f%#z")
+        }
+    }
+
+    #[cfg(feature = "chrono")]
+    impl FromVastTimestamp for chrono::DateTime<chrono::FixedOffset> {}
 }
