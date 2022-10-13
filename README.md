@@ -45,6 +45,10 @@
     * [x] ClickThrough
     * [x] ClickTracking
 
+## Features flags
+
+* `chrono`: Enables DateTime related helpers e.g. `v4::util::FromVastTimestamp`.
+
 ## Test
 
 `vast-protocol` is tested against v4.0, v4.1 and v.4.2 XMLs found in [VAST_Samples](https://github.com/InteractiveAdvertisingBureau/VAST_Samples). To test in your local machine, clone VAST_Samples repo
