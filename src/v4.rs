@@ -52,14 +52,18 @@ pub struct Wrapper;
 #[serde(rename_all = "PascalCase")]
 pub struct InLine {
     pub ad_system: AdSystem,
-    pub error: Option<String>,
-    pub ad_title: AdTitle,
+    pub error: Option<Error>,
     pub impression: Impression,
     pub description: Option<String>,
     pub advertiser: Option<String>,
     pub pricing: Option<Pricing>,
+    pub ad_title: AdTitle,
     pub creatives: Creatives,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Error(pub String);
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -160,13 +164,13 @@ impl From<std::time::Duration> for Duration {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TrackingEvents {
-    #[serde(rename(serialize = "TrackingEvent", deserialize = "$value"))]
-    pub content: Vec<TrackingEvent>,
+    #[serde(rename(serialize = "Tracking", deserialize = "$value"))]
+    pub content: Vec<Tracking>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct TrackingEvent {
+pub struct Tracking {
     pub event: String,
     pub offset: Option<String>,
     #[serde(rename = "$value")]
@@ -187,17 +191,17 @@ pub struct MediaFiles {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MediaFile {
+    pub id: Option<String>,
     pub delivery: String,
     pub r#type: String,
+    pub bitrate: Option<u64>,
     pub width: u64,
     pub height: u64,
-    pub codec: Option<String>,
-    pub id: Option<String>,
-    pub bitrate: Option<u64>,
     pub min_bitrate: Option<u64>,
     pub max_bitrate: Option<u64>,
     pub scalable: Option<String>,
     pub maintain_aspect_ratio: Option<String>,
+    pub codec: Option<String>,
     pub api_framework: Option<String>,
     #[serde(rename = "$value")]
     pub content: String,

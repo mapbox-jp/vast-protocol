@@ -58,7 +58,10 @@ fn deserialize_v4() {
     assert_eq!("iabtechlab", in_line.ad_system.content);
 
     // Error tag
-    assert_eq!("http://example.com/error", in_line.error.as_ref().unwrap());
+    assert_eq!(
+        "http://example.com/error",
+        in_line.error.as_ref().unwrap().0
+    );
 
     // Impression tag
     assert_eq!("Impression-ID", in_line.impression.id);
