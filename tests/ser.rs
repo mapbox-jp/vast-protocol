@@ -2,7 +2,45 @@ use vast_protocol::v4::*;
 
 #[test]
 fn serialize_v4() {
-    let xml = r#"<VAST version="4.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.iab.com/VAST"><Ad id="20001" sequence="1" conditionalAd="false"><InLine><AdSystem version="4.0">iabtechlab</AdSystem><AdTitle>iabtechlab video ad</AdTitle><Impression id="Impression-ID">http://example.com/track/impression</Impression><Pricing model="cpm" currency="USD"> 25.00 </Pricing><Creatives><Creative id="5480" sequence="1" adId="2447226"><UniversalAdId idRegistry="Ad-ID" idValue="8465">8465</UniversalAdId><Linear><TrackingEvents><TrackingEvent event="start">http://example.com/tracking/start</TrackingEvent><TrackingEvent event="firstQuartile">http://example.com/tracking/firstQuartile</TrackingEvent><TrackingEvent event="midpoint">http://example.com/tracking/midpoint</TrackingEvent><TrackingEvent event="thirdQuartile">http://example.com/tracking/thirdQuartile</TrackingEvent><TrackingEvent event="complete">http://example.com/tracking/complete</TrackingEvent><TrackingEvent event="progress" offset="00:00:10">http://example.com/tracking/progress-10</TrackingEvent></TrackingEvents><Duration>00:00:16</Duration><MediaFiles><MediaFile delivery="progress" type="video/mp4" width="1280" height="720" codec="H.264" id="5241" bitrate="2000" minBitrate="1500" maxBitrate="2500" scalable="1" maintainAspectRatio="1">https://iab-publicfiles.s3.amazonaws.com/vast/VAST-4.0-Short-Intro.mp4</MediaFile></MediaFiles><VideoClicks><ClickThrough id="blog">https://iabtechlab.com</ClickThrough></VideoClicks></Linear></Creative></Creatives></InLine></Ad></VAST>"#;
+    let xml = "\
+<VAST version=\"4.0\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://www.iab.com/VAST\">\
+  <Ad id=\"20001\" sequence=\"1\" conditionalAd=\"false\">\
+    <InLine>\
+      <AdSystem version=\"4.0\">iabtechlab</AdSystem>\
+      <Error>http://example.com/error</Error>\
+      <Impression id=\"Impression-ID\">http://example.com/track/impression</Impression>\
+      <Pricing model=\"cpm\" currency=\"USD\"> 25.00 </Pricing>\
+      <AdTitle>iabtechlab video ad</AdTitle>\
+      <Creatives>\
+        <Creative id=\"5480\" sequence=\"1\" adId=\"2447226\">\
+          <UniversalAdId idRegistry=\"Ad-ID\" idValue=\"8465\">8465</UniversalAdId>\
+          <Linear>\
+            <TrackingEvents>\
+              <Tracking event=\"start\">http://example.com/tracking/start</Tracking>\
+              <Tracking event=\"firstQuartile\">http://example.com/tracking/firstQuartile</Tracking>\
+              <Tracking event=\"midpoint\">http://example.com/tracking/midpoint</Tracking>\
+              <Tracking event=\"thirdQuartile\">http://example.com/tracking/thirdQuartile</Tracking>\
+              <Tracking event=\"complete\">http://example.com/tracking/complete</Tracking>\
+              <Tracking event=\"progress\" offset=\"00:00:10\">http://example.com/tracking/progress-10</Tracking>\
+            </TrackingEvents>\
+            <Duration>00:00:16</Duration>\
+            <MediaFiles>\
+              <MediaFile id=\"5241\" delivery=\"progressive\" type=\"video/mp4\" bitrate=\"2000\" width=\"1280\" height=\"720\" minBitrate=\"1500\" maxBitrate=\"2500\" scalable=\"1\" maintainAspectRatio=\"1\" codec=\"H.264\">\
+                https://iab-publicfiles.s3.amazonaws.com/vast/VAST-4.0-Short-Intro.mp4\
+              </MediaFile>\
+            </MediaFiles>\
+            <VideoClicks>\
+              <ClickThrough id=\"blog\">\
+                https://iabtechlab.com\
+              </ClickThrough>\
+            </VideoClicks>\
+          </Linear>\
+        </Creative>\
+      </Creatives>\
+    </InLine>\
+  </Ad>\
+</VAST>\
+";
 
     let vast = VAST::new("4.0", Ad {
         id: "20001".into(),
@@ -17,7 +55,7 @@ fn serialize_v4() {
             ad_title: AdTitle("iabtechlab video ad".into()),
             advertiser: None,
             description: None,
-            error: None,
+            error: Some(Error("http://example.com/error".into())),
             impression: Impression {
                 id: "Impression-ID".into(),
                 content: "http://example.com/track/impression".into(),
@@ -45,7 +83,7 @@ fn serialize_v4() {
                             content: vec![
                                 MediaFile {
                                     id: Some("5241".into()),
-                                    delivery: "progress".into(),
+                                    delivery: "progressive".into(),
                                     r#type: "video/mp4".into(),
                                     width: 1280,
                                     height: 720,
@@ -62,12 +100,12 @@ fn serialize_v4() {
                         },
                         tracking_events: TrackingEvents {
                             content: vec![
-                                TrackingEvent { event: "start".into(), offset: None, content:"http://example.com/tracking/start".into() },
-                                TrackingEvent { event: "firstQuartile".into(), offset: None, content: "http://example.com/tracking/firstQuartile".into() },
-                                TrackingEvent { event: "midpoint".into(), offset: None, content: "http://example.com/tracking/midpoint".into() },
-                                TrackingEvent { event: "thirdQuartile".into(), offset: None, content: "http://example.com/tracking/thirdQuartile".into() },
-                                TrackingEvent { event: "complete".into(), offset: None, content: "http://example.com/tracking/complete".into() },
-                                TrackingEvent { event: "progress".into(),  offset: Some("00:00:10".into()), content: "http://example.com/tracking/progress-10".into() },
+                                Tracking { event: "start".into(), offset: None, content:"http://example.com/tracking/start".into() },
+                                Tracking { event: "firstQuartile".into(), offset: None, content: "http://example.com/tracking/firstQuartile".into() },
+                                Tracking { event: "midpoint".into(), offset: None, content: "http://example.com/tracking/midpoint".into() },
+                                Tracking { event: "thirdQuartile".into(), offset: None, content: "http://example.com/tracking/thirdQuartile".into() },
+                                Tracking { event: "complete".into(), offset: None, content: "http://example.com/tracking/complete".into() },
+                                Tracking { event: "progress".into(),  offset: Some("00:00:10".into()), content: "http://example.com/tracking/progress-10".into() },
                             ]
                         },
                         video_clicks: Some(VideoClicks {
