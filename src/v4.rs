@@ -74,7 +74,7 @@ pub struct AdTitle(pub String);
 pub struct AdSystem {
     pub version: String,
     #[serde(rename = "$value")]
-    pub content: String,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -82,7 +82,7 @@ pub struct AdSystem {
 pub struct Impression {
     pub id: String,
     #[serde(rename = "$value")]
-    pub content: String,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -91,7 +91,7 @@ pub struct Pricing {
     pub model: String,
     pub currency: String,
     #[serde(rename = "$value")]
-    pub content: String,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -122,7 +122,7 @@ pub struct UniversalAdId {
     pub id_registry: String,
     pub id_value: Option<String>,
     #[serde(rename = "$value")]
-    pub content: String,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -174,7 +174,7 @@ pub struct Tracking {
     pub event: String,
     pub offset: Option<String>,
     #[serde(rename = "$value")]
-    pub content: String,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -204,7 +204,7 @@ pub struct MediaFile {
     pub codec: Option<String>,
     pub api_framework: Option<String>,
     #[serde(rename = "$value")]
-    pub content: String,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -223,7 +223,7 @@ pub struct VideoClicks {
 pub struct ClickThrough {
     pub id: String,
     #[serde(rename = "$value")]
-    pub content: String,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -231,7 +231,7 @@ pub struct ClickThrough {
 pub struct ClickTracking {
     pub id: Option<String>,
     #[serde(rename = "$value")]
-    pub content: String,
+    pub content: Option<String>,
 }
 
 pub mod util {

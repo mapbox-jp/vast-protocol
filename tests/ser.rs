@@ -50,7 +50,7 @@ fn serialize_v4() {
         in_line: Some(InLine {
             ad_system: AdSystem {
                 version: "4.0".into(),
-                content: "iabtechlab".into(),
+                content: Some("iabtechlab".into()),
             },
             ad_title: AdTitle("iabtechlab video ad".into()),
             advertiser: None,
@@ -58,12 +58,12 @@ fn serialize_v4() {
             error: Some(Error("http://example.com/error".into())),
             impression: Impression {
                 id: "Impression-ID".into(),
-                content: "http://example.com/track/impression".into(),
+                content: Some("http://example.com/track/impression".into()),
             },
             pricing: Some(Pricing {
                 model: "cpm".into(),
                 currency: "USD".into(),
-                content: " 25.00 ".into(),
+                content: Some(" 25.00 ".into()),
             }),
             creatives: Creatives {
                 content: vec![Creative {
@@ -73,7 +73,7 @@ fn serialize_v4() {
                     universal_ad_ids: vec![UniversalAdId {
                         id_registry: "Ad-ID".into(),
                         id_value: Some("8465".into()),
-                        content: "8465".into(),
+                        content: Some("8465".into()),
                     }],
                     non_linear_ads: None,
                     linear: Some(Linear {
@@ -93,25 +93,25 @@ fn serialize_v4() {
                                     scalable: Some("1".into()),
                                     maintain_aspect_ratio: Some("1".into()),
                                     codec: Some("H.264".into()),
-                                    content: "https://iab-publicfiles.s3.amazonaws.com/vast/VAST-4.0-Short-Intro.mp4".into(),
+                                    content: Some("https://iab-publicfiles.s3.amazonaws.com/vast/VAST-4.0-Short-Intro.mp4".into()),
                                     api_framework: None,
                                 }
                             ],
                         },
                         tracking_events: TrackingEvents {
                             content: vec![
-                                Tracking { event: "start".into(), offset: None, content:"http://example.com/tracking/start".into() },
-                                Tracking { event: "firstQuartile".into(), offset: None, content: "http://example.com/tracking/firstQuartile".into() },
-                                Tracking { event: "midpoint".into(), offset: None, content: "http://example.com/tracking/midpoint".into() },
-                                Tracking { event: "thirdQuartile".into(), offset: None, content: "http://example.com/tracking/thirdQuartile".into() },
-                                Tracking { event: "complete".into(), offset: None, content: "http://example.com/tracking/complete".into() },
-                                Tracking { event: "progress".into(),  offset: Some("00:00:10".into()), content: "http://example.com/tracking/progress-10".into() },
+                                Tracking { event: "start".into(), offset: None, content: Some("http://example.com/tracking/start".into()) },
+                                Tracking { event: "firstQuartile".into(), offset: None, content: Some("http://example.com/tracking/firstQuartile".into()) },
+                                Tracking { event: "midpoint".into(), offset: None, content: Some("http://example.com/tracking/midpoint".into()) },
+                                Tracking { event: "thirdQuartile".into(), offset: None, content: Some("http://example.com/tracking/thirdQuartile".into()) },
+                                Tracking { event: "complete".into(), offset: None, content: Some("http://example.com/tracking/complete".into()) },
+                                Tracking { event: "progress".into(),  offset: Some("00:00:10".into()), content: Some("http://example.com/tracking/progress-10".into()) },
                             ]
                         },
                         video_clicks: Some(VideoClicks {
                                click_through: Some(ClickThrough {
                                    id: "blog".into(),
-                                    content: "https://iabtechlab.com".into(),
+                                    content: Some("https://iabtechlab.com".into()),
                                }),
                                click_tracking: None,
                         })
