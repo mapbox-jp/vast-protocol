@@ -7,11 +7,7 @@ fn deserialize_v4() {
   <Ad id="20001" sequence="1" conditionalAd="false">
     <InLine>
       <AdSystem version="4.0">iabtechlab</AdSystem>
-      <Error>http://example.com/error</Error>
       <Impression id="Impression-ID">http://example.com/track/impression</Impression>
-      <Pricing model="cpm" currency="USD">
-        <![CDATA[ 25.00 ]]>
-      </Pricing>
       <AdTitle>iabtechlab video ad</AdTitle>
       <Creatives>
         <Creative id="5480" sequence="1" adId="2447226">
@@ -31,11 +27,6 @@ fn deserialize_v4() {
                 <![CDATA[https://iab-publicfiles.s3.amazonaws.com/vast/VAST-4.0-Short-Intro.mp4]]>
               </MediaFile>
             </MediaFiles>
-            <VideoClicks>
-              <ClickThrough id="blog">
-                <![CDATA[https://iabtechlab.com]]>
-              </ClickThrough>
-            </VideoClicks>
           </Linear>
         </Creative>
       </Creatives>
@@ -55,25 +46,14 @@ fn deserialize_v4() {
     assert_eq!("4.0", in_line.ad_system.version);
 
     // AdSystem tag
-    assert_eq!("iabtechlab", in_line.ad_system.content);
-
-    // Error tag
-    assert_eq!(
-        "http://example.com/error",
-        in_line.error.as_ref().unwrap().0
-    );
+    assert_eq!("iabtechlab", in_line.ad_system.content.unwrap());
 
     // Impression tag
     assert_eq!("Impression-ID", in_line.impression.id);
     assert_eq!(
         "http://example.com/track/impression",
-        in_line.impression.content
+        in_line.impression.content.unwrap()
     );
-
-    // Pricing tag
-    assert_eq!("cpm", in_line.pricing.as_ref().unwrap().model);
-    assert_eq!("USD", in_line.pricing.as_ref().unwrap().currency);
-    assert_eq!(" 25.00 ", in_line.pricing.as_ref().unwrap().content);
 
     // Creative tag
     let creative = &in_line.creatives.content[0];
@@ -85,7 +65,7 @@ fn deserialize_v4() {
     let universal_ad_id = &creative.universal_ad_ids[0];
     assert_eq!("Ad-ID", universal_ad_id.id_registry);
     assert_eq!("8465", universal_ad_id.id_value.as_ref().unwrap());
-    assert_eq!("8465", universal_ad_id.content);
+    assert_eq!("8465", universal_ad_id.content.as_ref().unwrap());
 
     // Linear tag
     let linear = &creative.linear.as_ref().unwrap();
@@ -111,12 +91,30 @@ fn deserialize_v4() {
     assert!(event4.offset.is_none());
     assert_eq!("00:00:10", event5.offset.as_ref().unwrap());
 
-    assert_eq!("http://example.com/tracking/start", event0.content);
-    assert_eq!("http://example.com/tracking/firstQuartile", event1.content);
-    assert_eq!("http://example.com/tracking/midpoint", event2.content);
-    assert_eq!("http://example.com/tracking/thirdQuartile", event3.content);
-    assert_eq!("http://example.com/tracking/complete", event4.content);
-    assert_eq!("http://example.com/tracking/progress-10", event5.content);
+    assert_eq!(
+        "http://example.com/tracking/start",
+        event0.content.as_ref().unwrap()
+    );
+    assert_eq!(
+        "http://example.com/tracking/firstQuartile",
+        event1.content.as_ref().unwrap()
+    );
+    assert_eq!(
+        "http://example.com/tracking/midpoint",
+        event2.content.as_ref().unwrap()
+    );
+    assert_eq!(
+        "http://example.com/tracking/thirdQuartile",
+        event3.content.as_ref().unwrap()
+    );
+    assert_eq!(
+        "http://example.com/tracking/complete",
+        event4.content.as_ref().unwrap()
+    );
+    assert_eq!(
+        "http://example.com/tracking/progress-10",
+        event5.content.as_ref().unwrap()
+    );
 
     // Duration tag
     assert_eq!("00:00:16", linear.duration.0);
@@ -135,17 +133,6 @@ fn deserialize_v4() {
     assert!(media.api_framework.is_none());
     assert_eq!(
         "https://iab-publicfiles.s3.amazonaws.com/vast/VAST-4.0-Short-Intro.mp4",
-        media.content
+        media.content.as_ref().unwrap()
     );
-
-    // ClickThrough tag
-    let click_through = &linear
-        .video_clicks
-        .as_ref()
-        .unwrap()
-        .click_through
-        .as_ref()
-        .unwrap();
-    assert_eq!("blog", click_through.id);
-    assert_eq!("https://iabtechlab.com", click_through.content);
 }
